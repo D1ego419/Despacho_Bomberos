@@ -11,7 +11,9 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 const db = getDatabase(app);
 
-/* MAPA */
+/* =========================
+   MAPA
+========================= */
 
 const map = L.map('map').setView([-36.6066, -72.1034], 12);
 
@@ -24,9 +26,11 @@ L.tileLayer(
 
 L.marker([-36.6066, -72.1034])
 .addTo(map)
-.bindPopup("Central de Bomberos");
+.bindPopup("🚒 Central de Bomberos");
 
-/* CAMBIAR ESTADO */
+/* =========================
+   CAMBIAR ESTADO EMERGENCIAS
+========================= */
 
 window.cambiarEstado = function(id, estado){
 
@@ -37,21 +41,43 @@ window.cambiarEstado = function(id, estado){
         }
     );
 
-}
+};
 
-/* TABLA */
+/* =========================
+   CAMBIAR ESTADO UNIDADES
+========================= */
+
+window.cambiarEstadoUnidad = function(unidad, estado){
+
+    update(
+        ref(db, "unidades/" + unidad),
+        {
+            estado: estado
+        }
+    );
+
+};
+
+/* =========================
+   TABLAS
+========================= */
 
 const tablaBody =
 document.getElementById("tablaBody");
 
-/* BOTÓN DESPACHAR */
+const tablaUnidades =
+document.getElementById("tablaUnidades");
+
+/* =========================
+   BOTÓN DESPACHAR
+========================= */
 
 document
 .getElementById("btnDespachar")
 .addEventListener("click", () => {
 
     const direccion =
-    document.getElementById("direccion").value;
+    document.getElementById("direccion").value.trim();
 
     const tipo =
     document.getElementById("tipo").value;
@@ -62,22 +88,31 @@ document
     const unidad =
     document.getElementById("unidad").value;
 
+    if(!direccion){
+
+        alert("Ingrese una dirección");
+
+        return;
+    }
+
     push(ref(db, "emergencias"), {
 
         direccion,
         tipo,
         compania,
         unidad,
-
         estado: "ACTIVA",
-
         hora: new Date().toLocaleTimeString()
 
     });
 
+    document.getElementById("direccion").value = "";
+
 });
 
-/* CARGAR EMERGENCIAS */
+/* =========================
+   CARGAR EMERGENCIAS
+========================= */
 
 onValue(
 ref(db, "emergencias"),
@@ -99,30 +134,30 @@ ref(db, "emergencias"),
         fila.innerHTML = `
 
         <td>${numero}</td>
-        <td>${datos[id].tipo}</td>
-        <td>${datos[id].direccion}</td>
-        <td>${datos[id].compania}</td>
-        <td>${datos[id].unidad}</td>
-        <td>${datos[id].hora}</td>
-        <td>${datos[id].estado}</td>
+        <td>${datos[id].tipo || ""}</td>
+        <td>${datos[id].direccion || ""}</td>
+        <td>${datos[id].compania || ""}</td>
+        <td>${datos[id].unidad || ""}</td>
+        <td>${datos[id].hora || ""}</td>
+        <td>${datos[id].estado || ""}</td>
 
         <td>
 
-        <button onclick="cambiarEstado('${id}','EN RUTA')">
-        Ruta
-        </button>
+            <button onclick="cambiarEstado('${id}','EN RUTA')">
+                Ruta
+            </button>
 
-        <button onclick="cambiarEstado('${id}','EN TRABAJO')">
-        Trabajo
-        </button>
+            <button onclick="cambiarEstado('${id}','EN TRABAJO')">
+                Trabajo
+            </button>
 
-        <button onclick="cambiarEstado('${id}','CONTROLADA')">
-        Controlada
-        </button>
+            <button onclick="cambiarEstado('${id}','CONTROLADA')">
+                Controlada
+            </button>
 
-        <button onclick="cambiarEstado('${id}','CERRADA')">
-        Cerrar
-        </button>
+            <button onclick="cambiarEstado('${id}','CERRADA')">
+                Cerrar
+            </button>
 
         </td>
         `;
@@ -130,6 +165,54 @@ ref(db, "emergencias"),
         tablaBody.appendChild(fila);
 
         numero++;
+
+    }
+
+});
+
+/* =========================
+   CARGAR UNIDADES
+========================= */
+
+onValue(
+ref(db, "unidades"),
+(snapshot) => {
+
+    tablaUnidades.innerHTML = "";
+
+    const unidades = snapshot.val();
+
+    if(!unidades) return;
+
+    for(let nombre in unidades){
+
+        let fila =
+        document.createElement("tr");
+
+        fila.innerHTML = `
+
+        <td>${nombre}</td>
+
+        <td>${unidades[nombre].estado}</td>
+
+        <td>
+
+            <button onclick="cambiarEstadoUnidad('${nombre}','Disponible')">
+                Disponible
+            </button>
+
+            <button onclick="cambiarEstadoUnidad('${nombre}','En Ruta')">
+                Ruta
+            </button>
+
+            <button onclick="cambiarEstadoUnidad('${nombre}','En Trabajo')">
+                Trabajo
+            </button>
+
+        </td>
+        `;
+
+        tablaUnidades.appendChild(fila);
 
     }
 
