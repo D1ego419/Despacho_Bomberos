@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Despacho Bomberos</title>
+
+<link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<h1>🚒 Central de Despacho</h1>
+
+<div class="panel">
+
+
+<input id="direccion" placeholder="Dirección de la emergencia">
+
+<select id="tipo">
+    <option>Incendio</option>
+    <option>Accidente</option>
+    <option>Rescate</option>
+    <option>Materiales Peligrosos</option>
+</select>
+
+<select id="compania">
+    <option>Primera Compañía</option>
+    <option>Segunda Compañía</option>
+    <option>Tercera Compañía</option>
+    <option>Cuarta Compañía</option>
+</select>
+
+<select id="unidad">
+    <option>B-1</option>
+    <option>BX-1</option>
+    <option>BR-1</option>
+    <option>Z-1</option>
+</select>
+
+<button id="btnDespachar">
+    Despachar
+</button>
+
+<button id="btnDespachar">
+Despachar
+</button>
+
+</div>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<div id="map"></div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<h2>Emergencias Activas</h2>
+
+<table id="tablaDespachos">
+
+<thead>
+<tr>
+<th>N°</th>
+<th>Tipo</th>
+<th>Dirección</th>
+<th>Compañía</th>
+<th>Unidad</th>
+<th>Hora</th>
+<th>Estado</th>
+<th>Acciones</th>
+</tr>
+</thead>
+
+<tbody id="tablaBody">
+
+</tbody>
+
+</table>
+
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
