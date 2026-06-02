@@ -113,30 +113,50 @@ document
 
     }
 
+ fetch(
+`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(direccion)}&format=jsonv2&limit=1`
+)
+.then(res => res.json())
+.then(data => {
+
+    console.log("Nominatim:", data);
+
+    let lat = -36.6066;
+    let lng = -72.1034;
+
+    if(data.length > 0){
+
+        lat = parseFloat(data[0].lat);
+        lng = parseFloat(data[0].lon);
+
+    }
+
+    console.log("Latitud:", lat);
+    console.log("Longitud:", lng);
+
     push(ref(db, "emergencias"), {
 
-    direccion,
-    tipo,
-    compania,
-    unidad,
+        direccion,
+        tipo,
+        compania,
+        unidad,
 
-    lat: -36.6066,
-    lng: -72.1034,
+        lat,
+        lng,
 
-    estado: "ACTIVA",
+        estado: "ACTIVA",
 
-    hora: new Date().toLocaleTimeString()
+        hora: new Date().toLocaleTimeString()
 
+    });
+
+})
+.catch(error => {
+    console.error("Error Nominatim:", error);
 });
 
-    document.getElementById("direccion").value = "";
-
+document.getElementById("direccion").value = "";
 });
-
-/* =========================
-   CARGAR EMERGENCIAS
-========================= */
-
 /* =========================
    CARGAR EMERGENCIAS
 ========================= */
@@ -171,18 +191,18 @@ onValue(
 
             if (datos[id].lat && datos[id].lng) {
 
-                L.marker([
-                    datos[id].lat,
-                    datos[id].lng
-                ])
-                .addTo(marcadores)
-                .bindPopup(`
-                    <b>${datos[id].tipo}</b><br>
-                    📍 ${datos[id].direccion}<br>
-                    🚒 ${datos[id].compania}<br>
-                    🚒 ${datos[id].unidad}<br>
-                    📡 ${datos[id].estado}
-                `);
+                const marker = L.marker([
+                datos[id].lat,
+                datos[id].lng
+            ])
+                .addTo(marcadores);
+                marker.bindPopup(`
+                <b>${datos[id].tipo}</b><br>
+                📍 ${datos[id].direccion}<br>
+                🚒 ${datos[id].compania}<br>
+                🚒 ${datos[id].unidad}<br>
+                📡 ${datos[id].estado}
+          `);
 
             }
 
@@ -319,4 +339,3 @@ if ("serviceWorker" in navigator) {
     });
 
 }
-
