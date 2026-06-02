@@ -137,105 +137,103 @@ document
    CARGAR EMERGENCIAS
 ========================= */
 
+/* =========================
+   CARGAR EMERGENCIAS
+========================= */
+
 onValue(
-ref(db, "emergencias"),
-(snapshot) => {
-    marcadores.clearLayers();
-    tablaBody.innerHTML = "";
+    ref(db, "emergencias"),
+    (snapshot) => {
 
-    const datos = snapshot.val();
+        marcadores.clearLayers();
+        tablaBody.innerHTML = "";
 
-    let activas = 0;
-    let incendios = 0;
+        const datos = snapshot.val();
 
-    if(!datos){
+        let activas = 0;
+        let incendios = 0;
 
-        totalEmergencias.textContent = 0;
-        totalIncendios.textContent = 0;
+        if (!datos) {
 
-        return;
-    }
+            totalEmergencias.textContent = 0;
+            totalIncendios.textContent = 0;
 
-    let numero = 1;
+            return;
+        }
 
-    for(let id in datos){
-        if(datos[id].lat && datos[id].lng){
+        let numero = 1;
 
-    L.marker([
-        datos[id].lat,
-        datos[id].lng
-    ])
-    .addTo(marcadores)
-    .bindPopup(`
+        for (let id in datos) {
 
-        <b>${datos[id].tipo}</b><br>
+            if (datos[id].estado === "CERRADA") {
+                continue;
+            }
 
-        📍 ${datos[id].direccion}<br>
+            if (datos[id].lat && datos[id].lng) {
 
-        🚒 ${datos[id].compania}<br>
+                L.marker([
+                    datos[id].lat,
+                    datos[id].lng
+                ])
+                .addTo(marcadores)
+                .bindPopup(`
+                    <b>${datos[id].tipo}</b><br>
+                    📍 ${datos[id].direccion}<br>
+                    🚒 ${datos[id].compania}<br>
+                    🚒 ${datos[id].unidad}<br>
+                    📡 ${datos[id].estado}
+                `);
 
-        🚒 ${datos[id].unidad}<br>
+            }
 
-        📡 ${datos[id].estado}
-
-    `);
-
-}
-
-        if(datos[id].estado !== "CERRADA"){
             activas++;
+
+            if (datos[id].tipo === "Incendio") {
+                incendios++;
+            }
+
+            let fila = document.createElement("tr");
+
+            fila.innerHTML = `
+                <td>${numero}</td>
+                <td>${datos[id].tipo || ""}</td>
+                <td>${datos[id].direccion || ""}</td>
+                <td>${datos[id].compania || ""}</td>
+                <td>${datos[id].unidad || ""}</td>
+                <td>${datos[id].hora || ""}</td>
+                <td>${datos[id].estado || ""}</td>
+
+                <td>
+
+                    <button onclick="cambiarEstado('${id}','EN RUTA')">
+                        Ruta
+                    </button>
+
+                    <button onclick="cambiarEstado('${id}','EN TRABAJO')">
+                        Trabajo
+                    </button>
+
+                    <button onclick="cambiarEstado('${id}','CONTROLADA')">
+                        Controlada
+                    </button>
+
+                    <button onclick="cambiarEstado('${id}','CERRADA')">
+                        Cerrar
+                    </button>
+
+                </td>
+            `;
+
+            tablaBody.appendChild(fila);
+
+            numero++;
+
         }
-
-        if(datos[id].tipo === "Incendio"){
-            incendios++;
-        }
-
-        let fila =
-        document.createElement("tr");
-
-        fila.innerHTML = `
-
-        <td>${numero}</td>
-        <td>${datos[id].tipo || ""}</td>
-        <td>${datos[id].direccion || ""}</td>
-        <td>${datos[id].compania || ""}</td>
-        <td>${datos[id].unidad || ""}</td>
-        <td>${datos[id].hora || ""}</td>
-        <td>${datos[id].estado || ""}</td>
-
-        <td>
-
-            <button onclick="cambiarEstado('${id}','EN RUTA')">
-                Ruta
-            </button>
-
-            <button onclick="cambiarEstado('${id}','EN TRABAJO')">
-                Trabajo
-            </button>
-
-            <button onclick="cambiarEstado('${id}','CONTROLADA')">
-                Controlada
-            </button>
-
-            <button onclick="cambiarEstado('${id}','CERRADA')">
-                Cerrar
-            </button>
-
-        </td>
-
-        `;
-
-        tablaBody.appendChild(fila);
-
-        numero++;
+        totalEmergencias.textContent = activas;
+        totalIncendios.textContent = incendios;
 
     }
-
-    totalEmergencias.textContent = activas;
-    totalIncendios.textContent = incendios;
-
-});
-
+);
 /* =========================
    CARGAR UNIDADES
 ========================= */
