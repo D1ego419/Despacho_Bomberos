@@ -17,6 +17,8 @@ const db = getDatabase(app);
 
 const map = L.map('map').setView([-36.6066, -72.1034], 12);
 
+const marcadores = L.layerGroup().addTo(map);
+
 L.tileLayer(
     'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
     {
@@ -113,14 +115,19 @@ document
 
     push(ref(db, "emergencias"), {
 
-        direccion,
-        tipo,
-        compania,
-        unidad,
-        estado: "ACTIVA",
-        hora: new Date().toLocaleTimeString()
+    direccion,
+    tipo,
+    compania,
+    unidad,
 
-    });
+    lat: -36.6066,
+    lng: -72.1034,
+
+    estado: "ACTIVA",
+
+    hora: new Date().toLocaleTimeString()
+
+});
 
     document.getElementById("direccion").value = "";
 
@@ -133,7 +140,7 @@ document
 onValue(
 ref(db, "emergencias"),
 (snapshot) => {
-
+    marcadores.clearLayers();
     tablaBody.innerHTML = "";
 
     const datos = snapshot.val();
@@ -152,6 +159,28 @@ ref(db, "emergencias"),
     let numero = 1;
 
     for(let id in datos){
+        if(datos[id].lat && datos[id].lng){
+
+    L.marker([
+        datos[id].lat,
+        datos[id].lng
+    ])
+    .addTo(marcadores)
+    .bindPopup(`
+
+        <b>${datos[id].tipo}</b><br>
+
+        📍 ${datos[id].direccion}<br>
+
+        🚒 ${datos[id].compania}<br>
+
+        🚒 ${datos[id].unidad}<br>
+
+        📡 ${datos[id].estado}
+
+    `);
+
+}
 
         if(datos[id].estado !== "CERRADA"){
             activas++;

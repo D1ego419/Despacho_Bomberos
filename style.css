@@ -95,3 +95,50 @@ tr:hover{
     }
 
 }
+/* =========================
+   DASHBOARD
+========================= */
+
+.dashboard{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+    gap:15px;
+    margin-bottom:20px;
+}
+
+.card{
+    background:white;
+    padding:20px;
+    border-radius:10px;
+    text-align:center;
+    box-shadow:0 2px 5px rgba(0,0,0,0.15);
+}
+
+.card h3{
+    margin:0;
+    color:#c62828;
+    font-size:16px;
+}
+
+.card span{
+    display:block;
+    margin-top:10px;
+    font-size:32px;
+    font-weight:bold;
+    color:#333;
+}
+body{
+    max-width:1400px;
+    margin:auto;
+}
+
+h1{
+    color:#c62828;
+}
+
+.panel{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
