@@ -29,6 +29,32 @@ L.marker([-36.6066, -72.1034])
 .bindPopup("🚒 Central de Bomberos");
 
 /* =========================
+   DASHBOARD
+========================= */
+
+const totalEmergencias =
+document.getElementById("totalEmergencias");
+
+const totalDisponibles =
+document.getElementById("totalDisponibles");
+
+const totalRuta =
+document.getElementById("totalRuta");
+
+const totalIncendios =
+document.getElementById("totalIncendios");
+
+/* =========================
+   TABLAS
+========================= */
+
+const tablaBody =
+document.getElementById("tablaBody");
+
+const tablaUnidades =
+document.getElementById("tablaUnidades");
+
+/* =========================
    CAMBIAR ESTADO EMERGENCIAS
 ========================= */
 
@@ -59,16 +85,6 @@ window.cambiarEstadoUnidad = function(unidad, estado){
 };
 
 /* =========================
-   TABLAS
-========================= */
-
-const tablaBody =
-document.getElementById("tablaBody");
-
-const tablaUnidades =
-document.getElementById("tablaUnidades");
-
-/* =========================
    BOTÓN DESPACHAR
 ========================= */
 
@@ -91,8 +107,8 @@ document
     if(!direccion){
 
         alert("Ingrese una dirección");
-
         return;
+
     }
 
     push(ref(db, "emergencias"), {
@@ -122,11 +138,28 @@ ref(db, "emergencias"),
 
     const datos = snapshot.val();
 
-    if(!datos) return;
+    let activas = 0;
+    let incendios = 0;
+
+    if(!datos){
+
+        totalEmergencias.textContent = 0;
+        totalIncendios.textContent = 0;
+
+        return;
+    }
 
     let numero = 1;
 
     for(let id in datos){
+
+        if(datos[id].estado !== "CERRADA"){
+            activas++;
+        }
+
+        if(datos[id].tipo === "Incendio"){
+            incendios++;
+        }
 
         let fila =
         document.createElement("tr");
@@ -160,6 +193,7 @@ ref(db, "emergencias"),
             </button>
 
         </td>
+
         `;
 
         tablaBody.appendChild(fila);
@@ -167,6 +201,9 @@ ref(db, "emergencias"),
         numero++;
 
     }
+
+    totalEmergencias.textContent = activas;
+    totalIncendios.textContent = incendios;
 
 });
 
@@ -182,9 +219,26 @@ ref(db, "unidades"),
 
     const unidades = snapshot.val();
 
-    if(!unidades) return;
+    let disponibles = 0;
+    let enRuta = 0;
+
+    if(!unidades){
+
+        totalDisponibles.textContent = 0;
+        totalRuta.textContent = 0;
+
+        return;
+    }
 
     for(let nombre in unidades){
+
+        if(unidades[nombre].estado === "Disponible"){
+            disponibles++;
+        }
+
+        if(unidades[nombre].estado === "En Ruta"){
+            enRuta++;
+        }
 
         let fila =
         document.createElement("tr");
@@ -210,10 +264,32 @@ ref(db, "unidades"),
             </button>
 
         </td>
+
         `;
 
         tablaUnidades.appendChild(fila);
 
     }
 
+    totalDisponibles.textContent = disponibles;
+    totalRuta.textContent = enRuta;
+
 });
+
+/* =========================
+   SERVICE WORKER
+========================= */
+
+if ("serviceWorker" in navigator) {
+
+    navigator.serviceWorker
+    .register("./sw.js")
+    .then(() => {
+        console.log("Service Worker registrado");
+    })
+    .catch(error => {
+        console.error(error);
+    });
+
+}
+
