@@ -18,6 +18,7 @@ const db = getDatabase(app);
 const map = L.map('map').setView([-36.6066, -72.1034], 12);
 
 const marcadores = L.layerGroup().addTo(map);
+const marcadoresUnidades = L.layerGroup().addTo(map);
 
 L.tileLayer(
     'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -264,6 +265,8 @@ ref(db, "unidades"),
 
     tablaUnidades.innerHTML = "";
 
+    marcadoresUnidades.clearLayers();
+
     const unidades = snapshot.val();
 
     let disponibles = 0;
@@ -278,6 +281,25 @@ ref(db, "unidades"),
     }
 
     for(let nombre in unidades){
+
+        /* GPS EN MAPA */
+
+        if(
+            unidades[nombre].lat &&
+            unidades[nombre].lng
+        ){
+
+            L.marker([
+                unidades[nombre].lat,
+                unidades[nombre].lng
+            ])
+            .addTo(marcadoresUnidades)
+            .bindPopup(`
+                <b>🚒 ${nombre}</b><br>
+                Estado: ${unidades[nombre].estado}
+            `);
+
+        }
 
         if(unidades[nombre].estado === "Disponible"){
             disponibles++;
@@ -294,7 +316,7 @@ ref(db, "unidades"),
 
         <td>${nombre}</td>
 
-        <td>${unidades[nombre].estado}</td>
+        <td>${unidades[nombre].estado || ""}</td>
 
         <td>
 
@@ -322,7 +344,6 @@ ref(db, "unidades"),
     totalRuta.textContent = enRuta;
 
 });
-
 /* =========================
    SERVICE WORKER
 ========================= */
