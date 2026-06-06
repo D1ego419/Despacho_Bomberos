@@ -39,6 +39,7 @@ document
 
         (error) => {
             alert("GPS no disponible");
+            console.error(error);
         },
 
         {
