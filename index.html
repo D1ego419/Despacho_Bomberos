@@ -22,29 +22,39 @@
 <body>
 
     <!-- TÍTULO -->
-    <h1>🚒 Central de Despacho</h1>
+    <h1> Cuerpo De Bomberos Pinto</h1>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
 
         <div class="card">
-            <h3>🚨 Emergencias Activas</h3>
+            <h3> Emergencias Activas</h3>
             <span id="totalEmergencias">0</span>
         </div>
 
         <div class="card">
-            <h3>🚒 Disponibles</h3>
+            <h3> Disponibles</h3>
             <span id="totalDisponibles">0</span>
         </div>
 
         <div class="card">
-            <h3>🚑 En Ruta</h3>
+            <h3> En Ruta</h3>
             <span id="totalRuta">0</span>
         </div>
 
         <div class="card">
-            <h3>🔥 Incendios</h3>
+            <h3> Incendios</h3>
             <span id="totalIncendios">0</span>
+        </div>
+
+        <div class="card">
+            <h3> Rescates</h3>
+            <span id="totalRescates">0</span>
+        </div>
+
+        <div class="card">
+            <h3> Emergencias Complejas</h3>
+            <span id="totalEmergenciasComplejas">0</span>
         </div>
 
     </div>
@@ -60,8 +70,10 @@
         <select id="tipo">
             <option>Incendio</option>
             <option>Accidente</option>
-            <option>Rescate</option>
+            <option>Rescate De Personas</option>
+            <option>Emanación De Gas</option>
             <option>Materiales Peligrosos</option>
+            <option>otros servicios</option>
         </select>
 
         <select id="compania">
@@ -72,9 +84,16 @@
 
         <select id="unidad">
             <option>B-1</option>
-            <option>BX-1</option>
             <option>BR-1</option>
             <option>Z-1</option>
+            <option>X-1</option>
+            <option>J-1</option>
+            <option>B-2</option>
+            <option>BX-2</option>
+            <option>X-2</option>
+            <option>B-3</option>
+            <option>BF-3</option>
+            <option>X-3</option>
         </select>
 
         <button id="btnDespachar">
@@ -84,12 +103,12 @@
     </div>
 
     <!-- MAPA -->
-    <h2>🗺️ Mapa de Emergencias</h2>
+    <h2> Mapa de Emergencias</h2>
 
     <div id="map"></div>
 
     <!-- ESTADO DE UNIDADES -->
-    <h2>🚒 Estado de Unidades</h2>
+    <h2> Estado de Unidades</h2>
 
     <table>
 
@@ -107,7 +126,7 @@
     </table>
 
     <!-- EMERGENCIAS ACTIVAS -->
-    <h2>🚨 Emergencias Activas</h2>
+    <h2> Emergencias Activas</h2>
 
     <table id="tablaDespachos">
 

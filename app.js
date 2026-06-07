@@ -29,7 +29,7 @@ L.tileLayer(
 
 L.marker([-36.6066, -72.1034])
 .addTo(map)
-.bindPopup("🚒 Central de Bomberos");
+.bindPopup("Central de Bomberos");
 
 /* =========================
    DASHBOARD
@@ -199,10 +199,10 @@ onValue(
                 .addTo(marcadores);
                 marker.bindPopup(`
                 <b>${datos[id].tipo}</b><br>
-                📍 ${datos[id].direccion}<br>
-                🚒 ${datos[id].compania}<br>
-                🚒 ${datos[id].unidad}<br>
-                📡 ${datos[id].estado}
+                 ${datos[id].direccion}<br>
+                 ${datos[id].compania}<br>
+                 ${datos[id].unidad}<br>
+                 ${datos[id].estado}
           `);
 
             }
@@ -289,15 +289,26 @@ ref(db, "unidades"),
             unidades[nombre].lng
         ){
 
-            L.marker([
-                unidades[nombre].lat,
-                unidades[nombre].lng
-            ])
-            .addTo(marcadoresUnidades)
-            .bindPopup(`
-                <b>🚒 ${nombre}</b><br>
-                Estado: ${unidades[nombre].estado}
-            `);
+           const iconoCarro = L.divIcon({
+    html: "🚒",
+    className: "",
+    iconSize: [50, 50]
+});
+
+L.marker(
+    [
+        unidades[nombre].lat,
+        unidades[nombre].lng
+    ],
+    {
+        icon: iconoCarro
+    }
+)
+.addTo(marcadoresUnidades)
+.bindPopup(`
+    <b>${nombre}</b><br>
+    Estado: ${unidades[nombre].estado}
+`);
 
         }
 
