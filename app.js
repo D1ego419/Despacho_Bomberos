@@ -290,8 +290,8 @@ ref(db, "unidades"),
         ){
 
            const iconoCarro = L.divIcon({
-    html: "🚒",
-    className: "",
+    html: `🚒<br><small>${nombre}</small>`,
+    className: "iconoUnidad",
     iconSize: [50, 50]
 });
 
