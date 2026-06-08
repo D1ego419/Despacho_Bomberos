@@ -102,58 +102,59 @@
 
     </div>
 
-    <!-- MAPA -->
     <h2> Mapa de Emergencias</h2>
 
-    <div id="map"></div>
+<div class="contenedor-mapa">
 
-    <!-- ESTADO DE UNIDADES -->
-    <h2> Estado de Unidades</h2>
+    <div class="mapa-box">
+        <div id="map"></div>
+    </div>
 
-    <table>
+    <div class="unidades-box">
 
-        <thead>
-            <tr>
-                <th>Unidad</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+        <h2> Estado de Unidades</h2>
 
-        <tbody id="tablaUnidades">
-        </tbody>
+        <table>
+            <thead>
+                <tr>
+                    <th>Unidad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
 
-    </table>
+            <tbody id="tablaUnidades">
+            </tbody>
+        </table>
 
-    <!-- EMERGENCIAS ACTIVAS -->
-    <h2> Emergencias Activas</h2>
+    </div>
 
-    <table id="tablaDespachos">
+</div>
 
-        <thead>
-            <tr>
-                <th>N°</th>
-                <th>Tipo</th>
-                <th>Dirección</th>
-                <th>Compañía</th>
-                <th>Unidad</th>
-                <th>Hora</th>
-                <th>Estado</th>
-                <th>Acciones</th>
-            </tr>
-        </thead>
+<h2> Emergencias Activas</h2>
 
-        <tbody id="tablaBody">
-        </tbody>
+<table id="tablaDespachos">
 
-    </table>
+    <thead>
+        <tr>
+            <th>N°</th>
+            <th>Tipo</th>
+            <th>Dirección</th>
+            <th>Compañía</th>
+            <th>Unidad</th>
+            <th>Hora</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
 
-    <!-- LEAFLET -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <tbody id="tablaBody">
+    </tbody>
 
-    <!-- APP -->
-    <script type="module" src="app.js"></script>
+</table>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<script type="module" src="app.js"></script>
 
 </body>
-
 </html>
