@@ -109,6 +109,9 @@ document.getElementById("tablaBody");
 const tablaUnidades =
 document.getElementById("tablaUnidades");
 
+const detalleEmergencia =
+document.getElementById("detalleEmergencia");
+
 /* =========================
    CAMBIAR ESTADO EMERGENCIAS
 ========================= */
@@ -241,15 +244,18 @@ onValue(
         }
 
         let numero = 1;
+        let ultima = null;
 
         for (let id in datos) {
 
             if (datos[id].estado === "CERRADA") {
                 continue;
             }
+            ultima = datos[id];
             ultimaEmergencia = {
                  lat: datos[id].lat,
                 lng: datos[id].lng
+
         };
             if (datos[id].lat && datos[id].lng) {
 
@@ -313,6 +319,19 @@ onValue(
         }
         totalEmergencias.textContent = activas;
         totalIncendios.textContent = incendios;
+
+        if(ultima){
+
+    detalleEmergencia.innerHTML = `
+        <b>Tipo:</b> ${ultima.tipo}<br>
+        <b>Dirección:</b> ${ultima.direccion}<br>
+        <b>Compañía:</b> ${ultima.compania}<br>
+        <b>Unidad:</b> ${ultima.unidad}<br>
+        <b>Estado:</b> ${ultima.estado}<br>
+        <b>Hora:</b> ${ultima.hora}
+    `;
+    }
+
 
     }
 );

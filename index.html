@@ -5,16 +5,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Despacho Bomberos</title>
+    <title>Central de Alarmas y Telecomunicaciones CB Pinto</title>
 
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
     <!-- Leaflet -->
     <link rel="stylesheet"
-          href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+    <!-- Leaflet Routing -->
     <link rel="stylesheet"
-         href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+        href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
     <!-- PWA -->
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#c62828">
@@ -23,39 +26,50 @@
 <body>
 
     <!-- TÍTULO -->
-    <h1> Central De Alarmas y Telecomunicaciones CB PINTO</h1>
+    <h1>🚒 Central De Alarmas y Telecomunicaciones CB Pinto</h1>
 
     <!-- DASHBOARD -->
     <div class="dashboard">
 
         <div class="card">
-            <h3> Emergencias Activas</h3>
+            <h3>Emergencias Activas</h3>
             <span id="totalEmergencias">0</span>
         </div>
 
         <div class="card">
-            <h3> Disponibles</h3>
+            <h3>Disponibles</h3>
             <span id="totalDisponibles">0</span>
         </div>
 
         <div class="card">
-            <h3> En Ruta</h3>
+            <h3>En Ruta</h3>
             <span id="totalRuta">0</span>
         </div>
 
         <div class="card">
-            <h3> Incendios</h3>
+            <h3>Incendios</h3>
             <span id="totalIncendios">0</span>
         </div>
 
         <div class="card">
-            <h3> Rescates</h3>
+            <h3>Rescates</h3>
             <span id="totalRescates">0</span>
         </div>
 
         <div class="card">
-            <h3> Emergencias Complejas</h3>
+            <h3>Emergencias Complejas</h3>
             <span id="totalEmergenciasComplejas">0</span>
+        </div>
+
+    </div>
+
+    <!-- EMERGENCIA ACTIVA -->
+    <div id="emergenciaActiva" class="emergencia-activa">
+
+        <h2>🚨 Emergencia Activa</h2>
+
+        <div id="detalleEmergencia">
+            Sin emergencias activas
         </div>
 
     </div>
@@ -74,7 +88,7 @@
             <option>Rescate De Personas</option>
             <option>Emanación De Gas</option>
             <option>Materiales Peligrosos</option>
-            <option>otros servicios</option>
+            <option>Otros Servicios</option>
         </select>
 
         <select id="compania">
@@ -103,60 +117,74 @@
 
     </div>
 
-    <h2> Mapa de Emergencias</h2>
+    <!-- MAPA + UNIDADES -->
+    <div class="contenedor-mapa">
 
-<div class="contenedor-mapa">
+        <div class="mapa-box">
 
-    <div class="mapa-box">
-        <div id="map"></div>
+            <h2>🗺️ Mapa de Emergencias</h2>
+
+            <div id="map"></div>
+
+        </div>
+
+        <div class="unidades-box">
+
+            <h2>🚒 Estado de Unidades</h2>
+
+            <table>
+
+                <thead>
+                    <tr>
+                        <th>Unidad</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+
+                <tbody id="tablaUnidades">
+                </tbody>
+
+            </table>
+
+        </div>
+
     </div>
 
-    <div class="unidades-box">
+    <!-- EMERGENCIAS ACTIVAS -->
+    <h2>📋 Emergencias Activas</h2>
 
-        <h2> Estado de Unidades</h2>
+    <table id="tablaDespachos">
 
-        <table>
-            <thead>
-                <tr>
-                    <th>Unidad</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
+        <thead>
 
-            <tbody id="tablaUnidades">
-            </tbody>
-        </table>
+            <tr>
+                <th>N°</th>
+                <th>Tipo</th>
+                <th>Dirección</th>
+                <th>Compañía</th>
+                <th>Unidad</th>
+                <th>Hora</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
 
-    </div>
+        </thead>
 
-</div>
+        <tbody id="tablaBody">
+        </tbody>
 
-<h2> Emergencias Activas</h2>
+    </table>
 
-<table id="tablaDespachos">
+    <!-- LEAFLET -->
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-    <thead>
-        <tr>
-            <th>N°</th>
-            <th>Tipo</th>
-            <th>Dirección</th>
-            <th>Compañía</th>
-            <th>Unidad</th>
-            <th>Hora</th>
-            <th>Estado</th>
-            <th>Acciones</th>
-        </tr>
-    </thead>
+    <!-- ROUTING MACHINE -->
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
-    <tbody id="tablaBody">
-    </tbody>
-
-</table>
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-<script type="module" src="app.js"></script>
+    <!-- APP -->
+    <script type="module" src="app.js"></script>
 
 </body>
+
 </html>

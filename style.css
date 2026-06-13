@@ -218,4 +218,23 @@ td{
 .estado-EnTrabajo{
     color:red;
     font-weight:bold;
+}.emergencia-activa{
+
+    background:#fff3cd;
+    border-left:8px solid red;
+
+    padding:15px;
+    margin:20px 0;
+
+    border-radius:10px;
+
+    box-shadow:0 2px 5px rgba(0,0,0,.15);
+
+}
+
+.emergencia-activa h2{
+
+    margin:0 0 10px 0;
+    color:#c62828;
+
 }
