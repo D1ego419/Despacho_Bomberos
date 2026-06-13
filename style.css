@@ -199,3 +199,23 @@ td{
     border:1px solid #ddd;
     text-align:center;
 }
+.iconoUnidad{
+    font-size:30px;
+}
+.leaflet-routing-container {
+    display: none !important;
+}
+.estado-Disponible{
+    color:green;
+    font-weight:bold;
+}
+
+.estado-EnRuta{
+    color:orange;
+    font-weight:bold;
+}
+
+.estado-EnTrabajo{
+    color:red;
+    font-weight:bold;
+}

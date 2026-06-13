@@ -19,6 +19,7 @@ const map = L.map('map').setView([-36.6066, -72.1034], 12);
 
 const marcadores = L.layerGroup().addTo(map);
 const marcadoresUnidades = L.layerGroup().addTo(map);
+let rutaActual = null;
 
 L.tileLayer(
     'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -30,6 +31,57 @@ L.tileLayer(
 L.marker([-36.6066, -72.1034])
 .addTo(map)
 .bindPopup("Central de Bomberos");
+
+function mostrarRuta(
+    latUnidad,
+    lngUnidad,
+    latEmergencia,
+    lngEmergencia
+){
+console.log(
+        "MOSTRAR RUTA",
+        latUnidad,
+        lngUnidad,
+        latEmergencia,
+        lngEmergencia
+    );
+    
+    if(rutaActual){
+        map.removeControl(rutaActual);
+    }
+
+    rutaActual = L.Routing.control({
+
+    waypoints: [
+
+        L.latLng(latUnidad, lngUnidad),
+        L.latLng(latEmergencia, lngEmergencia)
+
+    ],
+
+    routeWhileDragging: false,
+    addWaypoints: false,
+    draggableWaypoints: false,
+    fitSelectedRoutes: true,
+    show: false,
+
+    lineOptions: {
+        styles: [
+            {
+                color: "red",
+                opacity: 0.8,
+                weight: 6
+            }
+        ]
+    },
+
+    createMarker: function() {
+        return null;
+    }
+
+}).addTo(map);
+
+}
 
 /* =========================
    DASHBOARD
@@ -150,6 +202,12 @@ document
         hora: new Date().toLocaleTimeString()
 
     });
+    update(
+    ref(db, "unidades/" + unidad),
+    {
+        estado: "En Ruta"
+    }
+);
 
 })
 .catch(error => {
@@ -161,7 +219,7 @@ document.getElementById("direccion").value = "";
 /* =========================
    CARGAR EMERGENCIAS
 ========================= */
-
+let ultimaEmergencia = null;
 onValue(
     ref(db, "emergencias"),
     (snapshot) => {
@@ -189,7 +247,10 @@ onValue(
             if (datos[id].estado === "CERRADA") {
                 continue;
             }
-
+            ultimaEmergencia = {
+                 lat: datos[id].lat,
+                lng: datos[id].lng
+        };
             if (datos[id].lat && datos[id].lng) {
 
                 const marker = L.marker([
@@ -295,20 +356,35 @@ ref(db, "unidades"),
     iconSize: [50, 50]
 });
 
-L.marker(
-    [
-        unidades[nombre].lat,
-        unidades[nombre].lng
-    ],
-    {
-        icon: iconoCarro
-    }
+const marcadorUnidad = L.marker(
+[
+    unidades[nombre].lat,
+    unidades[nombre].lng
+],
+{
+    icon: iconoCarro
+}
 )
-.addTo(marcadoresUnidades)
-.bindPopup(`
+.addTo(marcadoresUnidades);
+
+marcadorUnidad.bindPopup(`
     <b>${nombre}</b><br>
     Estado: ${unidades[nombre].estado}
 `);
+
+if(
+    ultimaEmergencia &&
+    unidades[nombre].estado === "En Ruta"
+){
+
+    mostrarRuta(
+        unidades[nombre].lat,
+        unidades[nombre].lng,
+        ultimaEmergencia.lat,
+        ultimaEmergencia.lng
+    );
+
+}
 
         }
 
@@ -327,9 +403,16 @@ L.marker(
 
         <td>${nombre}</td>
 
-        <td>${unidades[nombre].estado || ""}</td>
-
         <td>
+        <span class="estado-${unidades[nombre].estado.replace(/\s/g,'')}">
+
+        ${unidades[nombre].estado}
+
+        </span>
+
+        </td>
+
+       
 
             <button onclick="cambiarEstadoUnidad('${nombre}','Disponible')">
                 Disponible
