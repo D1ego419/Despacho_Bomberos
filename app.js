@@ -11,6 +11,9 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 const db = getDatabase(app);
 
+const alarma = new Audio("./sirena.mp3");
+alarma.volume = 1.0;
+
 /* =========================
    MAPA
 ========================= */
@@ -223,28 +226,39 @@ document.getElementById("direccion").value = "";
    CARGAR EMERGENCIAS
 ========================= */
 let ultimaEmergencia = null;
+let cantidadEmergenciasAnterior = 0;
 onValue(
-    ref(db, "emergencias"),
-    (snapshot) => {
+ref(db, "emergencias"),
+(snapshot) => {
 
-        marcadores.clearLayers();
-        tablaBody.innerHTML = "";
+    marcadores.clearLayers();
+    tablaBody.innerHTML = "";
 
-        const datos = snapshot.val();
+    const datos = snapshot.val();
 
-        let activas = 0;
-        let incendios = 0;
+    let ultima = null;
+
+    const cantidadActual =
+    datos ? Object.keys(datos).length : 0;
+
+    let activas = 0;
+    let incendios = 0;
+
+
 
         if (!datos) {
 
             totalEmergencias.textContent = 0;
             totalIncendios.textContent = 0;
 
+            detalleEmergencia.innerHTML =
+            "Sin emergencias activas";
+
             return;
+        
         }
 
         let numero = 1;
-        let ultima = null;
 
         for (let id in datos) {
 
@@ -320,6 +334,34 @@ onValue(
         totalEmergencias.textContent = activas;
         totalIncendios.textContent = incendios;
 
+            if(
+        cantidadEmergenciasAnterior > 0 &&
+        cantidadActual > cantidadEmergenciasAnterior &&
+        ultima
+    ){
+
+        alarma.play();
+
+        if(Notification.permission === "granted"){
+
+            new Notification(
+                `🚨 ${ultima.tipo}`,
+                {
+                    body:
+                    `${ultima.direccion} | ${ultima.unidad}`
+                }
+            );
+
+        }
+
+        if(navigator.vibrate){
+            navigator.vibrate([500,300,500]);
+        }
+
+    }
+
+    cantidadEmergenciasAnterior = cantidadActual;
+
         if(ultima){
 
     detalleEmergencia.innerHTML = `
@@ -329,7 +371,7 @@ onValue(
         <b>Unidad:</b> ${ultima.unidad}<br>
         <b>Estado:</b> ${ultima.estado}<br>
         <b>Hora:</b> ${ultima.hora}
-    `;
+     `;
     }
 
 
@@ -418,32 +460,31 @@ if(
         let fila =
         document.createElement("tr");
 
+        
+
         fila.innerHTML = `
 
         <td>${nombre}</td>
 
         <td>
         <span class="estado-${unidades[nombre].estado.replace(/\s/g,'')}">
-
         ${unidades[nombre].estado}
-
         </span>
-
         </td>
 
-       
+        <td>
 
-            <button onclick="cambiarEstadoUnidad('${nombre}','Disponible')">
-                Disponible
-            </button>
+        <button onclick="cambiarEstadoUnidad('${nombre}','Disponible')">
+        Disponible
+        </button>
 
-            <button onclick="cambiarEstadoUnidad('${nombre}','En Ruta')">
-                Ruta
-            </button>
+        <button onclick="cambiarEstadoUnidad('${nombre}','En Ruta')">
+        Ruta
+        </button>
 
-            <button onclick="cambiarEstadoUnidad('${nombre}','En Trabajo')">
-                Trabajo
-            </button>
+        <button onclick="cambiarEstadoUnidad('${nombre}','En Trabajo')">
+        Trabajo
+        </button>
 
         </td>
 
