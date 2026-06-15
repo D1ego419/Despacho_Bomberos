@@ -11,7 +11,7 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 const db = getDatabase(app);
 
- const alarma = new Audio("./sirena.mp3");
+ const alarma = new Audio("./sirena.mp3.mp3");
 alarma.volume = 1.0;
 
 /* =========================
@@ -340,7 +340,15 @@ ref(db, "emergencias"),
         ultima
     ){
 
-        alarma.play();
+        alarma.currentTime = 0;
+
+        alarma.play()
+        .then(() => {
+        console.log("Sirena reproducida");
+        })
+        .catch(error => {
+        console.error("Error audio:", error);
+    });
 
         if(Notification.permission === "granted"){
 

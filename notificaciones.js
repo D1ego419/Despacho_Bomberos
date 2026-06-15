@@ -18,7 +18,9 @@ console.log("Notificaciones cargadas");
 
 Notification.requestPermission()
 .then(async (permission) => {
+console.log("Dispositivo conectado");
 
+alert("Permiso: " + Notification.permission);
     console.log("Permiso:", permission);
 
     if (permission !== "granted") {
@@ -37,6 +39,8 @@ Notification.requestPermission()
 
     console.log("TOKEN FCM:");
     console.log(token);
+
+    alert("TOKEN:\n" + token);
 
     await set(
         ref(
