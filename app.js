@@ -11,7 +11,7 @@ from "https://www.gstatic.com/firebasejs/12.0.0/firebase-database.js";
 
 const db = getDatabase(app);
 
-const alarma = new Audio("./sirena.mp3");
+ const alarma = new Audio("./sirena.mp3");
 alarma.volume = 1.0;
 
 /* =========================
